@@ -1,6 +1,7 @@
 import serial
 import logging
 import os
+import datetime
 
 class Rotor:
     BAUD_RATE = 9600
@@ -26,7 +27,7 @@ class Rotor:
     def _send_cmd(self, command):
         '''Sends command to Rotor'''
         self._port.write((command + "\r").encode())
-        self._log.info("Executed command: " + command)
+        self._log.info(str(datetime.datetime.now()) + ": Executed command: " + command)
 
     def get_azimuth(self):
         '''Gets azimuth parameter of the antenna'''
@@ -34,7 +35,7 @@ class Rotor:
 
         azimuth = self._port.readline().strip() # Reads the response from the Rotor
         azimuth = int(azimuth[3:6])
-        self._log.info("Azimuth = " + str(azimuth))
+        self._log.info(str(datetime.datetime.now()) + ": Azimuth = " + str(azimuth))
         return  azimuth
 
     def get_elevation(self):
@@ -43,17 +44,17 @@ class Rotor:
 
         elevation = self._port.readline().strip()  # Reads the response from the Rotor
         elevation = int(elevation[3:6])
-        self._log.info("Elevation = " + str(elevation))
+        self._log.info(str(datetime.datetime.now()) + ": Elevation = " + str(elevation))
         return elevation
 
     def rotate(self, azimuth, elevation):
         '''Rotates antenna to the given azimuth and elevation'''
         if azimuth < 0 or azimuth > 361:
-            self._log.warning("Azimuth outside of range: " + azimuth)
+            self._log.warning(str(datetime.datetime.now()) + ": Azimuth outside of range: " + str(azimuth))
             return
 
         if elevation < 0 or elevation > 90:
-            self._log.warning("Elevation outside of range: " + elevation)
+            self._log.warning(str(datetime.datetime.now()) + ": Elevation outside of range: " + str(elevation))
             return
 
         command = self.MOVE_TO + ' ' + str(azimuth) + ' ' + str(elevation)
