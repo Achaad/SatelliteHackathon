@@ -1,5 +1,6 @@
 import serial
 import logging
+import os
 
 class Rotor:
     BAUD_RATE = 9600
@@ -16,7 +17,7 @@ class Rotor:
         class_name = self.__class__.__name__
         # opens serial port for communication with Yaesu G-5500
         self._port = serial.Serial(com_port, self.BAUD_RATE, bytesize=8, stopbits=1, timeout=0.5, xonxoff=0, rtscts=0)
-        logging.basicConfig(filename="/output/rotor.log", level=logging.DEBUG)
+        logging.basicConfig(filename=(os.path.abspath(os.pardir) + "/output/rotor.log"), level=logging.DEBUG)
         self._log = logging.getLogger(name="main." + str(class_name))
 
     def __delete__(self):
@@ -25,7 +26,7 @@ class Rotor:
     def _send_cmd(self, command):
         '''Sends command to Rotor'''
         self._port.write((command + "\r").encode())
-        self._log.log("Executed command: " + command)
+        self._log.info("Executed command: " + command)
 
     def get_azimuth(self):
         '''Gets azimuth parameter of the antenna'''
@@ -33,7 +34,7 @@ class Rotor:
 
         azimuth = self._port.readline().strip() # Reads the response from the Rotor
         azimuth = int(azimuth[3:6])
-        self._log.log("Azimuth = " + azimuth)
+        self._log.info("Azimuth = " + str(azimuth))
         return  azimuth
 
     def get_elevation(self):
@@ -42,7 +43,7 @@ class Rotor:
 
         elevation = self._port.readline().strip()  # Reads the response from the Rotor
         elevation = int(elevation[3:6])
-        self._log.log("Elevation = " + elevation)
+        self._log.info("Elevation = " + str(elevation))
         return elevation
 
     def rotate(self, azimuth, elevation):
