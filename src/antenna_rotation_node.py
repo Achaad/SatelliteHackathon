@@ -62,6 +62,7 @@ class Rotor:
 
 
 if __name__ == "__main__":
+    # Just an example of the use of this class
     r = Rotor("COM4")
 
     print(r.get_azimuth())
