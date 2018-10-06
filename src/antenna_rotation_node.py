@@ -13,7 +13,7 @@ class Rotor:
     def __init__(self, com_port):
         class_name = self.__class__.__name__
         # opens serial port for communication with Yaesu G-5500
-        self._port = serial.Serial(com_port, self.BAUD_RATE, bytesize=8, stopbits=1, timeout=1, xonxoff=0, rtscts=0)
+        self._port = serial.Serial(com_port, self.BAUD_RATE, bytesize=8, stopbits=1, timeout=0.5, xonxoff=0, rtscts=0)
 
 
 
@@ -30,7 +30,7 @@ class Rotor:
         self._send_cmd(self.GET_AZIMUTH) # Sends the request to the Rotor
 
         azimuth = self._port.readline().strip() # Reads the response from the Rotor
-        print("Azimuth received")
+        azimuth = int(azimuth[3:6])
         return  azimuth
 
     def get_elevation(self):
@@ -38,6 +38,7 @@ class Rotor:
         self._send_cmd(self.GET_ELEVATION)  # Sends the request to the Rotor
 
         elevation = self._port.readline().strip()  # Reads the response from the Rotor
+        elevation = int(elevation[3:6])
         return elevation
 
     def rotate(self, azimuth, elevation):
