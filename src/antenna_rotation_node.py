@@ -13,7 +13,8 @@ class Rotor:
     def __init__(self, com_port):
         class_name = self.__class__.__name__
         # opens serial port for communication with Yaesu G-5500
-        self._port = serial.Serial(com_port, self.BAUD_RATE, stopbits=1, timeout=None, xonxoff=0, rtscts=0)
+        self._port = serial.Serial(com_port, self.BAUD_RATE, stopbits=1, timeout=1, xonxoff=0, rtscts=0)
+
 
 
     def __delete__(self, instance):
@@ -21,14 +22,17 @@ class Rotor:
 
     def _send_cmd(self, command):
         '''Sends command to Rotor'''
-        self._port.write(command + "\r\n")
+        self._port.write((command + "\r\n").encode())
+        print(command + " executed")
 
     def get_azimuth(self):
         '''Gets azimuth parameter of the antenna'''
         self._send_cmd(self.GET_AZIMUTH) # Sends the request to the Rotor
 
+        print("Command goes further")
         azimuth = self._port.readline().strip() # Reads the response from the Rotor
-        return  azimuth
+        print("Azimuth received")
+        return  azimuth.decode()
 
     def get_elevation(self):
         '''Gets elevation parameter of the antenna'''
@@ -37,21 +41,21 @@ class Rotor:
         elevation = self._port.readline().strip()   # Reads the response from the Rotor
         return elevation
 
-    def rotate(self, azimuth, elevaation):
+    def rotate(self, azimuth, elevation):
         '''Rotates antenna to the given azimuth and elevation'''
         if azimuth < 0 or azimuth > 361:
             return
 
-        if elevaation < 0 or elevaation > 90:
+        if elevation < 0 or elevation > 90:
             return
 
-        command = self.MOVE_TO + ' ' + azimuth + ' ' + elevaation
+        command = self.MOVE_TO + ' ' + str(azimuth) + ' ' + str(elevation)
         self._send_cmd(command)
 
 
 if __name__ == "__main__":
     r = Rotor("COM4")
 
-    print(r.get_elevation())
     print(r.get_azimuth())
-    r.rotate(180, 44)
+    #print(r.get_elevation())
+    #r.rotate(180, 44)
