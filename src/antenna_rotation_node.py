@@ -16,7 +16,7 @@ class Rotor:
         class_name = self.__class__.__name__
         # opens serial port for communication with Yaesu G-5500
         self._port = serial.Serial(com_port, self.BAUD_RATE, bytesize=8, stopbits=1, timeout=0.5, xonxoff=0, rtscts=0)
-        logging.basicConfig(filename="/output/rotor.log")
+        logging.basicConfig(filename="/output/rotor.log", level=logging.DEBUG)
         self._log = logging.getLogger(name="main." + str(class_name))
 
     def __delete__(self):
