@@ -1,4 +1,5 @@
 import serial
+import logging
 
 class Rotor:
     BAUD_RATE = 9600
@@ -9,14 +10,14 @@ class Rotor:
     MOVE_TO = 'W'
 
     _port = None
+    _log = None
 
     def __init__(self, com_port):
         class_name = self.__class__.__name__
         # opens serial port for communication with Yaesu G-5500
         self._port = serial.Serial(com_port, self.BAUD_RATE, bytesize=8, stopbits=1, timeout=0.5, xonxoff=0, rtscts=0)
-
-
-
+        logging.basicConfig(filename="/output/rotor.log")
+        self._log = logging.getLogger(name="main." + str(class_name))
 
     def __delete__(self):
         self._port.close()
@@ -24,6 +25,7 @@ class Rotor:
     def _send_cmd(self, command):
         '''Sends command to Rotor'''
         self._port.write((command + "\r").encode())
+        self._log.log("Executed command: " + command)
 
     def get_azimuth(self):
         '''Gets azimuth parameter of the antenna'''
@@ -31,6 +33,7 @@ class Rotor:
 
         azimuth = self._port.readline().strip() # Reads the response from the Rotor
         azimuth = int(azimuth[3:6])
+        self._log.log("Azimuth = " + azimuth)
         return  azimuth
 
     def get_elevation(self):
@@ -39,14 +42,17 @@ class Rotor:
 
         elevation = self._port.readline().strip()  # Reads the response from the Rotor
         elevation = int(elevation[3:6])
+        self._log.log("Elevation = " + elevation)
         return elevation
 
     def rotate(self, azimuth, elevation):
         '''Rotates antenna to the given azimuth and elevation'''
         if azimuth < 0 or azimuth > 361:
+            self._log.warning("Azimuth outside of range: " + azimuth)
             return
 
         if elevation < 0 or elevation > 90:
+            self._log.warning("Elevation outside of range: " + elevation)
             return
 
         command = self.MOVE_TO + ' ' + str(azimuth) + ' ' + str(elevation)
