@@ -45,6 +45,7 @@ class Rotor:
 
         elevation = self._port.readline().strip()  # Reads the response from the Rotor
         elevation = int(elevation[3:6])
+        elevation = 90 - elevation
         self._log.info(str(datetime.datetime.now()) + ": Elevation = " + str(elevation))
         return elevation
 

@@ -4,11 +4,13 @@ import schedule
 import time
 
 class TLEConverter:
-    def __init__(self):
+    def __init__(self, tle_path):
         self.GROUND_STATION_LATITUDE = '59.394870'
         self.GROUND_STATION_LONGITUDE = '24.661399'
         self.GROUND_STATION_ELEVATION = 1
+        self.tle_path = tle_path
 
+    '''
     def run_program(self):
         """
         Check the Satellite position every second
@@ -18,6 +20,7 @@ class TLEConverter:
         while True:
             schedule.run_pending()
             time.sleep(0.5)
+    '''
 
     def convert_tuple_to_signal(self, tuple):
         """
@@ -40,11 +43,19 @@ class TLEConverter:
         """
         
         tle_lines = []
-        try:
-            for line in open('tle.txt', 'r').readlines():
-                tle_lines.append(line)
-        except Exception as error:
-            print("Can't get tle data.")
+        if not self.tle_path:
+            try:
+                for line in open('tle.txt', 'r').readlines():
+                    tle_lines.append(line)
+            except Exception as error:
+                print("Can't get tle data.")
+
+        else:
+            try:
+                for line in open(self.tle_path, 'r').readlines():
+                    tle_lines.append(line)
+            except Exception as error:
+                print("Can't get tle data.")
 
         observer = ephem.Observer()
         observer.lat = '59.394870'
@@ -58,7 +69,7 @@ class TLEConverter:
         except Exception as error:
             print("Can't compute with ephem.")
 
-        print(self.convert_tuple_to_signal((satellite.az, satellite.alt)))
+        # print(self.convert_tuple_to_signal((satellite.az, satellite.alt)))
         return self.convert_tuple_to_signal((satellite.az, satellite.alt))
 
 def main():
