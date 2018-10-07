@@ -27,7 +27,7 @@ class Tracker(Rotor, TLEConverter):
         azimuthAndElevation = self.get_signal()
 
         self.azimuth, self.elevation = azimuthAndElevation[0], azimuthAndElevation[1]
-        self.rotate( int(round(self.azimuth, 0)), int(round(self.elevation)) )
+        self.rotate(self.azimuth, self.elevation)
         print( int(round(self.azimuth, 0)), int(round(self.elevation)) )
 
 
