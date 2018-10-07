@@ -47,9 +47,9 @@ class TLEConverter:
             print("Can't get tle data.")
 
         observer = ephem.Observer()
-        observer.lat = self.GROUND_STATION_LATITUDE
-        observer.long = self.GROUND_STATION_LONGITUDE
-        observer.elev = self.GROUND_STATION_ELEVATION
+        observer.lat = '59.394870'
+        observer.long = '24.661399'
+        observer.elev = 1
  
         satellite = ephem.readtle(tle_lines[0], tle_lines[1], tle_lines[2])
         

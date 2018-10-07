@@ -2,6 +2,9 @@ from antenna_rotation_node import Rotor
 from tle2signal import TLEConverter
 import schedule
 import time
+import math
+import logging
+
 
 
 class Tracker(Rotor, TLEConverter):
@@ -22,8 +25,10 @@ class Tracker(Rotor, TLEConverter):
     def tracking(self):
         
         azimuthAndElevation = self.get_signal()
+
         self.azimuth, self.elevation = azimuthAndElevation[0], azimuthAndElevation[1]
-        return self.rotate(self.azimuth, self.elevation)
+        self.rotate( int(round(self.azimuth, 0)), int(round(self.elevation)) )
+        print( int(round(self.azimuth, 0)), int(round(self.elevation)) )
 
 
 def main():

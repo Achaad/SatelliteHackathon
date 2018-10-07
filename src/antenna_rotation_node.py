@@ -2,6 +2,7 @@ import serial
 import logging
 import os
 import datetime
+import time
 
 class Rotor:
     BAUD_RATE = 9600
@@ -63,8 +64,14 @@ class Rotor:
 
 if __name__ == "__main__":
     # Just an example of the use of this class
-    r = Rotor("COM4")
+    r = Rotor("COM3")
 
     print(r.get_azimuth())
     print(r.get_elevation())
     r.rotate(180, 44)
+    time.sleep(1)
+    r.rotate(180, 50)
+    time.sleep(1)
+    r.rotate(180, 64)
+    time.sleep(1)
+    r.rotate(180, 74)
