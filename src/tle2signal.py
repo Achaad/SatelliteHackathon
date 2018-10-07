@@ -41,7 +41,7 @@ class TLEConverter:
         
         tle_lines = []
         try:
-            for line in open('E:\\Course\\TTU\\CubeSat\\parabol-control-development\\src\\antenna\\antenna_controller\\tle\\tle.txt', 'r').readlines():
+            for line in open('tle.txt', 'r').readlines():
                 tle_lines.append(line)
         except Exception as error:
             print("Can't get tle data.")

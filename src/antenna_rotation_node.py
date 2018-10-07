@@ -58,6 +58,8 @@ class Rotor:
             self._log.warning(str(datetime.datetime.now()) + ": Elevation outside of range: " + str(elevation))
             return
 
+        elevation = 90 - int(round(elevation, 0))
+        azimuth = int(round(azimuth, 0))
         command = self.MOVE_TO + ' ' + str(azimuth) + ' ' + str(elevation)
         self._send_cmd(command)
 

@@ -27,12 +27,12 @@ class Tracker(Rotor, TLEConverter):
         azimuthAndElevation = self.get_signal()
 
         self.azimuth, self.elevation = azimuthAndElevation[0], azimuthAndElevation[1]
-        self.rotate( int(round(self.azimuth, 0)), int(round(self.elevation)) )
+        self.rotate(self.azimuth, self.elevation)
         print( int(round(self.azimuth, 0)), int(round(self.elevation)) )
 
 
 def main():
-    tracker = Tracker("COM3")
+    tracker = Tracker("COM4")
     tracker.run_program()
 
 if __name__ == '__main__':
