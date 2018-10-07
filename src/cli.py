@@ -1,15 +1,22 @@
 from src.track_and_move import Tracker
+from multiprocessing import Process
 import serial
+
+def f(tracker):
+    tracker.run_program()
+
 
 def user_commands():
     command = None
     print("\'a\' for antenna azimuth")
     print("\'e\' for antenna elevation")
-    print("\'s\' for satellite position\n")
+    print("\'s\' for satellite position")
+    print("\'t\' for tracking")
+    print("\'stop\' to stop tracking\n")
     # TODO: create stop command
     while not command:
         command = input("Please enter a command: ").lower()
-        if command != 'e' and command != 'a' and command != 's':
+        if command != 'e' and command != 'a' and command != 's' and command != 't' and command != "stop":
             command = None
             print("Wrong command!\n")
 
@@ -41,17 +48,29 @@ def public_void_static_main():
             print("Wrong com port!")
 
     tracker = Tracker(port, tle_path)
+
+    process = Process(target=f, args=(tracker, ))
     # tracker.run_program() #TODO: put into thread
 
     user_command = user_commands()
 
     # TODO: create while loop
-    if user_command == 'a':
-        print("here", tracker.get_azimuth())
-    elif user_command == 'e':
-        print(tracker.get_elevation())
-    elif user_command == 's':
-        print(tracker.get_signal())
+    while True:
+        if user_command == 'a':
+            print("here", tracker.get_azimuth())
+        elif user_command == 'e':
+            print(tracker.get_elevation())
+        elif user_command == 's':
+            print(tracker.get_signal())
+        elif user_command == 't':
+            process.start()
+            process.join()
+        elif user_command == "stop":
+            process.terminate()
+            break
+
+        print()
+        user_command = user_commands()
 
 
 
