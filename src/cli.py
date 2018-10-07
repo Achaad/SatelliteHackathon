@@ -1,10 +1,6 @@
 from src.track_and_move import Tracker
-from multiprocessing import Process
+from multiprocessing import Pool
 import serial
-
-def f(tracker):
-    tracker.run_program()
-
 
 def user_commands():
     command = None
@@ -23,7 +19,6 @@ def user_commands():
     return command
 
 def public_void_static_main():
-
     tle_path = None
 
     # Asks for tle file path
@@ -48,10 +43,7 @@ def public_void_static_main():
             print("Wrong com port!")
 
     tracker = Tracker(port, tle_path)
-
-    process = Process(target=f, args=(tracker, ))
-    # tracker.run_program() #TODO: put into thread
-
+    pool = Pool(2)
     user_command = user_commands()
 
     # TODO: create while loop
@@ -63,10 +55,10 @@ def public_void_static_main():
         elif user_command == 's':
             print(tracker.get_signal())
         elif user_command == 't':
-            process.start()
-            process.join()
+            pool.map_async(tracker.__call__(), (1,))
         elif user_command == "stop":
-            process.terminate()
+            pool.terminate()
+            pool.close()
             break
 
         print()

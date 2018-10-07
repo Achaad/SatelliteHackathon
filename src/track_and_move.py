@@ -13,6 +13,9 @@ class Tracker(Rotor, TLEConverter):
         self.azimuth = 0
         self.elevation = 0
 
+    def __call__(self):
+        self.run_program()
+
     def run_program(self):
 
         schedule.every(1).seconds.do(self.tracking)
