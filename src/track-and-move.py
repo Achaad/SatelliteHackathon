@@ -12,12 +12,15 @@ class Tracker(Rotor, TLEConverter):
         self.elevation = 0
 
     def run_program(self):
+
         schedule.every(1).seconds.do(self.tracking)
+
         while True:
             schedule.run_pending()
             time.sleep(0.5)
 
     def tracking(self):
+        
         azimuthAndElevation = self.get_signal()
         self.azimuth, self.elevation = azimuthAndElevation[0], azimuthAndElevation[1]
         return self.rotate(self.azimuth, self.elevation)

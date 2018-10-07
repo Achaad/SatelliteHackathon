@@ -40,9 +40,11 @@ class TLEConverter:
         """
         
         tle_lines = []
-
-        for line in open('E:\\Course\\TTU\\CubeSat\\parabol-control-development\\src\\antenna\\antenna_controller\\tle\\tle.txt', 'r').readlines():
-            tle_lines.append(line)
+        try:
+            for line in open('E:\\Course\\TTU\\CubeSat\\parabol-control-development\\src\\antenna\\antenna_controller\\tle\\tle.txt', 'r').readlines():
+                tle_lines.append(line)
+        except Exception as error:
+            print("Can't get tle data.")
 
         observer = ephem.Observer()
         observer.lat = self.GROUND_STATION_LATITUDE
@@ -50,7 +52,11 @@ class TLEConverter:
         observer.elev = self.GROUND_STATION_ELEVATION
  
         satellite = ephem.readtle(tle_lines[0], tle_lines[1], tle_lines[2])
-        satellite.compute(observer)
+        
+        try:
+            satellite.compute(observer)
+        except Exception as error:
+            print("Can't compute with ephem.")
 
         print(self.convert_tuple_to_signal((satellite.az, satellite.alt)))
         return self.convert_tuple_to_signal((satellite.az, satellite.alt))
