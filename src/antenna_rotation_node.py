@@ -2,6 +2,7 @@ import serial
 import logging
 import os
 import datetime
+import time
 
 class Rotor:
     BAUD_RATE = 9600
@@ -44,6 +45,7 @@ class Rotor:
 
         elevation = self._port.readline().strip()  # Reads the response from the Rotor
         elevation = int(elevation[3:6])
+        elevation = 90 - elevation
         self._log.info(str(datetime.datetime.now()) + ": Elevation = " + str(elevation))
         return elevation
 
@@ -57,14 +59,22 @@ class Rotor:
             self._log.warning(str(datetime.datetime.now()) + ": Elevation outside of range: " + str(elevation))
             return
 
+        elevation = 90 - int(round(elevation, 0))
+        azimuth = int(round(azimuth, 0))
         command = self.MOVE_TO + ' ' + str(azimuth) + ' ' + str(elevation)
         self._send_cmd(command)
 
 
 if __name__ == "__main__":
     # Just an example of the use of this class
-    r = Rotor("COM4")
+    r = Rotor("COM3")
 
     print(r.get_azimuth())
     print(r.get_elevation())
     r.rotate(180, 44)
+    time.sleep(1)
+    r.rotate(180, 50)
+    time.sleep(1)
+    r.rotate(180, 64)
+    time.sleep(1)
+    r.rotate(180, 74)
