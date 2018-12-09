@@ -1,4 +1,10 @@
 # SatelliteHackathon
+TTÜ100 Satellite Hackathon - "Antenna Tracking System"
 
-#To run antenna_rotation_node.py need to install serial & pyserial
-#To run tle2signal.py need to install ephem
+•	Develop cubeSat sub-system to track satellite and rotate antenna  
+
+### Requirements
+
+Install serial & pyserial & ephem by following step,
+
+	$ pip install serial pyserial ephem
